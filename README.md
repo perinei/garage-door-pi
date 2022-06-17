@@ -1,7 +1,12 @@
 # garage
 control garage door and monitor status (open / close) using raspberry pi and AWS IoT
 
-app should runs as a service that automatically starts at reboot
+app should runs as a service that automatically starts at reboot.
+you can use systemctl to start/enable/status/stop service.
+example:
+$ systemctl start garage
+$ systemctl enable garage
+$ systemctl status enable
 
 example of service file configuration /usr/lib/systemd/system/garage.service
 
