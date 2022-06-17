@@ -22,7 +22,7 @@ User=pi
 
 Type=idle
 
-ExecStart=/usr/bin/python3 /home/pi/garageapp/app.py --endpoint <mqtt broker endpoint> --root-ca /home/pi/garageapp/root-CA.crt --cert /home/pi/gar$
+ExecStart=/usr/bin/python3 /home/pi/garageapp/app.py --endpoint abcdef-ats.iot.us-east-1.amazonaws.com --root-ca /home/pi/garageapp/root-CA.crt --cert /home/pi/gar$
 
 [Install]
 
