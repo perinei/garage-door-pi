@@ -14,21 +14,13 @@ $ systemctl status enable
 example of service file configuration /usr/lib/systemd/system/garage.service
 
 [Unit]
-
 Description=Garage Manager
-
 After=multi-user.target
-
 [Service]
-
 User=pi
-
 Type=idle
-
 ExecStart=/usr/bin/python3 /home/pi/garageapp/app.py --endpoint abcdef-ats.iot.us-east-1.amazonaws.com --root-ca /home/pi/garageapp/root-CA.crt --cert /home/pi/garageapp/cert
-
 [Install]
-
 WantedBy=multi-user.target
   
   
