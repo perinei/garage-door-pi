@@ -1,0 +1,122 @@
+{
+    "detectorModelDefinition": {
+        "states": [
+            {
+                "stateName": "Closed",
+                "onInput": {
+                    "events": [],
+                    "transitionEvents": [
+                        {
+                            "eventName": "to_Open",
+                            "condition": "$input.gg.state.reported.switch == 'Open'",
+                            "actions": [],
+                            "nextState": "Open"
+                        }
+                    ]
+                },
+                "onEnter": {
+                    "events": [
+                        {
+                            "eventName": "Clear Timer",
+                            "condition": "true",
+                            "actions": [
+                                {
+                                    "clearTimer": {
+                                        "timerName": "timer"
+                                    }
+                                },
+                                {
+                                    "iotTopicPublish": {
+                                        "mqttTopic": "test"
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                },
+                "onExit": {
+                    "events": []
+                }
+            },
+            {
+                "stateName": "Open",
+                "onInput": {
+                    "events": [
+                        {
+                            "eventName": "timeout",
+                            "condition": "timeout(\"timer\")",
+                            "actions": [
+                                {
+                                    "iotTopicPublish": {
+                                        "mqttTopic": "test",
+                                        "payload": {
+                                            "contentExpression": "'{\n  \"timer\": \"timeout\"\n}'",
+                                            "type": "JSON"
+                                        }
+                                    }
+                                },
+                                {
+                                    "sns": {
+                                        "targetArn": "arn:aws:sns:us-east-1:040312837985:garage_notification",
+                                        "payload": {
+                                            "contentExpression": "\"Your Garage is Open for a long time\"",
+                                            "type": "STRING"
+                                        }
+                                    }
+                                },
+                                {
+                                    "resetTimer": {
+                                        "timerName": "timer"
+                                    }
+                                }
+                            ]
+                        }
+                    ],
+                    "transitionEvents": [
+                        {
+                            "eventName": "to_Closed",
+                            "condition": "$input.gg.state.reported.switch == 'Closed'",
+                            "actions": [],
+                            "nextState": "Closed"
+                        }
+                    ]
+                },
+                "onEnter": {
+                    "events": [
+                        {
+                            "eventName": "create timer",
+                            "condition": "true",
+                            "actions": [
+                                {
+                                    "setTimer": {
+                                        "timerName": "timer",
+                                        "seconds": 900,
+                                        "durationExpression": null
+                                    }
+                                },
+                                {
+                                    "iotTopicPublish": {
+                                        "mqttTopic": "test",
+                                        "payload": {
+                                            "contentExpression": "'{\"timer\":\"created\"}'",
+                                            "type": "JSON"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                },
+                "onExit": {
+                    "events": []
+                }
+            }
+        ],
+        "initialStateName": "Closed"
+    },
+    "detectorModelDescription": null,
+    "detectorModelName": "GarageDoorReminder",
+    "evaluationMethod": "BATCH",
+    "key": null,
+    "roleArn": "arn:aws:iam::040312837985:role/garage_reminder_events"
+}
